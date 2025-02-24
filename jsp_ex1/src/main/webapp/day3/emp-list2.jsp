@@ -28,17 +28,19 @@
 		
 	<%
 		ResultSet rs = null;	
-		String query = 
-			"SELECT "
-			+ "E.EMPNO, E.ENAME, E.SAL, GRADE, " 
-			+ "NVL(E2.ENAME, ' ') AS TNAME, DNAME, E.DEPTNO "
-			+ "FROM EMP E "
-			+ "LEFT JOIN EMP E2 ON E.MGR = E2.EMPNO "
-			+ "INNER JOIN SALGRADE S ON E.SAL BETWEEN LOSAL AND HISAL "
-			+ "INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO "
-			+ "ORDER BY GRADE DESC";
-		rs = stmt.executeQuery(query);
-		while(rs.next()){
+		try{
+			String query = 
+				"SELECT E.EMPNO, E.ENAME, E.SAL, GRADE, E2.ENAME AS TNAME, DNAME, D.DEPTNO "
+				+ "FROM EMP E "
+				+ "INNER JOIN EMP E2 ON E.MGR = E2.EMPNO "
+				+ "INNER JOIN DEPT D ON E.DEPTNO = D.DEPTNO "
+				+ "INNER JOIN SALGRADE S ON E.SAL BETWEEN LOSAL AND HISAL "
+				+ "ORDER BY GRADE DESC";
+			
+			rs = stmt.executeQuery(query);
+			// 학번, 이름, 학과, 성별(남자, 여자)
+			while(rs.next()){
+				String empNo = rs.getString("EMPNO");
 	%>
 			<tr>
 				<td><%= rs.getString("EMPNO") %></td>
@@ -46,10 +48,14 @@
 				<td><%= rs.getString("SAL") %></td>
 				<td><%= rs.getString("GRADE") %></td>
 				<td><%= rs.getString("TNAME") %></td>
-				<td><a href="emp-d-chart2.jsp?deptNo=<%= rs.getString("DEPTNO") %>"><%= rs.getString("DNAME") %></a></td>
+				<td><a href="emp-d-chart.jsp?deptNo=<%= rs.getString("DEPTNO") %>"><%= rs.getString("DNAME") %></a></td>
 			</tr>
-	<%		
+	<%			
+			}
+		} catch(SQLException e){
+			out.println("오류 발생!");
 		}
+	
 	%>
 	</table>
 	
