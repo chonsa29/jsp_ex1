@@ -22,6 +22,7 @@
 <script>
 	function fnLogin() {
 		let login = document.login;
+		console.log(login);
 		if (login.id.value == "") {
 			alert("아이디를 입력해주세요.");
 			login.id.focus();
