@@ -20,21 +20,17 @@ table, th, tr, td {
 			<th>학번</th>
 			<th>이름</th>
 			<th>학과</th>
-			<th>과목</th>
 			<th>점수</th>
 		</tr>
 		<%
 		try {
-			ResultSet rs = stmt.executeQuery("SELECT S.STU_ID, STU_NAME, STU_DEPT, SUBJECT, GRADE "+
-					"FROM TBL_STULIST S "+
-					"INNER JOIN TBL_GRADE G ON S.STU_ID = G.STU_ID");
+			ResultSet rs = stmt.executeQuery("SELECT S.STU_ID, STU_NAME, STU_DEPT,AVG(GRADE) AS GRADE FROM TBL_STULIST S INNER JOIN TBL_GRADE G ON S.STU_ID = G.STU_ID GROUP BY S.STU_ID, STU_NAME, STU_DEPT ORDER BY GRADE DESC");
 			while (rs.next()) {
 		%>
 		<tr>
 			<td><%=rs.getString("STU_ID")%></td>
 			<td><a href ="student-view.jsp?stuName=<%=rs.getString("STU_NAME")%>"><%=rs.getString("STU_NAME")%></a></td>
 			<td><%=rs.getString("STU_DEPT")%></td>
-			<td><%=rs.getString("SUBJECT")%></td>
 			<td><%=rs.getString("GRADE")%></td>
 		</tr>
 		<%
